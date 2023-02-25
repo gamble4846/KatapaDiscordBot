@@ -22,6 +22,15 @@ namespace KatapaDiscordBot.Main
             };
             _client = new DiscordSocketClient(config);
             _client.Log += Log;
+
+            _client.MessageReceived += async (message) =>
+            {
+                if (message.Content.StartsWith("!ping"))
+                {
+                    await message.Channel.SendMessageAsync("Pong!");
+                }
+            };
+
             var token = ConfigJson.Token;
 
             await _client.LoginAsync(TokenType.Bot, token);
