@@ -6,10 +6,15 @@ using Discord.Net;
 using Newtonsoft.Json;
 using System;
 using KatapaDiscordBot.Commands;
+using KatapaDiscordBot.Commands.BasicCommands;
+using System.Reflection;
+using System.Collections.Generic;
+using KatapaDiscordBot.Commands.AudioCommands;
+using Discord.Commands;
 
 namespace KatapaDiscordBot.Main
 {
-    public class Bot
+    public class Bot : ModuleBase
     {
         private DiscordSocketClient _client;
         public async Task RunAsync()
@@ -49,24 +54,29 @@ namespace KatapaDiscordBot.Main
 
         public async Task Client_Ready()
         {
-            var globalCommand = new SlashCommandBuilder();
-            globalCommand.WithName("first-global-command");
-            globalCommand.WithDescription("This is my first global slash command");
-
-            try
-            {
-                await _client.CreateGlobalApplicationCommandAsync(globalCommand.Build());
-            }
-            catch (Exception ex)
-            {
-                var json = JsonConvert.SerializeObject(ex.Message, Formatting.Indented);
-                Console.WriteLine(json);
-            }
+            await HelpCommand.Register(_client);
+            await GreetCommand.Register(_client);
+            await PlayCommand.Register(_client);
         }
+
 
         private async Task SlashCommandHandler(SocketSlashCommand command)
         {
-            await command.RespondAsync($"You executed {command.Data.Name}");
+            switch (command.Data.Name)
+            {
+                case "help":
+                    await HelpCommand.Handle(command, _client, Context);
+                    break;
+                case "greet":
+                    await GreetCommand.Handle(command, _client, Context);
+                    break;
+                case "play":
+                    await PlayCommand.Handle(command, _client, Context);
+                    break;
+                default:
+                    await command.RespondAsync($"Command Not Found!!");
+                    break;
+            }
         }
     }
 }

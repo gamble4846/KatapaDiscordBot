@@ -104,7 +104,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\BasicCommands.cs" />
+    <Compile Include="Commands\AudioCommands\PlayCommand.cs" />
+    <Compile Include="Commands\BasicCommands\GreetCommand.cs" />
+    <Compile Include="Commands\BasicCommands\HelpCommand.cs" />
     <Compile Include="Main\Bot.cs" />
     <Compile Include="Models\ConfigJSONModel.cs" />
     <Compile Include="Program.cs" />
